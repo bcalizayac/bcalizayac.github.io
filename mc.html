@@ -1,0 +1,187 @@
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Método de Medios Cuadrados</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+        }
+
+        h2 {
+            text-align: center;
+            color: #333;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: separate;
+            margin-top: 20px;
+            border: 3px solid #ccc;
+        }
+
+        th, td {
+            border: 1px solid #ccc;
+            text-align: center;
+            padding: 10px;
+        }
+
+        th {
+            background-color: #FFFFCC;
+            color: #000;
+            font-size: 18px; /* Tamaño de fuente aumentado para los encabezados */
+        }
+
+        td {
+            background-color: rgba(255, 255, 255, 0.4); /* Color semi-transparente tipo agua */
+        }
+
+        a {
+            display: block;
+            text-align: center;
+            font-size: 18px;
+            font-weight: bold;
+            margin-top: 20px;
+            text-decoration: none;
+            background-color: #FFD700;
+            color: #000;
+            padding: 10px;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+
+        a:hover {
+            background-color: #000000;
+            color: #fff;
+        }
+
+        .error-message {
+            text-align: center;
+            color: red;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+<div class="tabla">
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const urlParams = new URLSearchParams(window.location.search);
+    const semilla = parseInt(urlParams.get('semilla'));
+    const iteraciones = parseInt(urlParams.get('iteraciones'));
+    const digitos = parseInt(urlParams.get('digitos'));
+
+    if (isNaN(semilla) || isNaN(iteraciones) || isNaN(digitos)) {
+        const errorMessage = document.createElement('div');
+        errorMessage.className = 'error-message';
+        errorMessage.textContent = 'Por favor, ingrese valores numéricos válidos.';
+        document.body.appendChild(errorMessage);
+    } else {
+        const resultados = calcularMediosCuadrados(semilla, iteraciones, digitos);
+        mostrarResultados(resultados);
+    }
+
+    function calcularMediosCuadrados(semilla, iteraciones, digitos) {
+        const resultados = [];
+
+        for (let i = 0; i < iteraciones; i++) {
+            // Cuadrado de la semilla
+            const cuadrado = semilla * semilla;
+
+            // Extraer una porción de los dígitos del cuadrado
+            const cuadradoStr = cuadrado.toString();
+            const inicio = Math.floor((cuadradoStr.length - digitos) / 2);
+            const numeroAleatorio = parseFloat('0.' + cuadradoStr.substr(inicio, digitos));
+
+            // Agregar al resultado
+            resultados.push({
+                'iteracion': i + 1,
+                'semilla': semilla,
+                'cuadrado': cuadrado,
+                'numero_generado': numeroAleatorio.toFixed(digitos),
+            });
+
+            // Usar el resultado como la nueva semilla
+            semilla = parseInt(cuadradoStr.substr(inicio, digitos));
+        }
+
+        return resultados;
+    }
+
+    function mostrarResultados(resultados) {
+        const container = document.createElement('div');
+        container.className = 'container';
+        document.body.appendChild(container);
+
+        const titulo = document.createElement('h2');
+        titulo.textContent = 'Resultados del Método de Medios Cuadrados';
+        container.appendChild(titulo);
+
+        const tabla = document.createElement('table');
+        container.appendChild(tabla);
+
+        const encabezado = document.createElement('tr');
+        tabla.appendChild(encabezado);
+
+        const encabezados = ['Iteración', 'Semilla', 'Cuadrado', 'Número Generado'];
+        encabezados.forEach(function (encabezadoTexto) {
+            const th = document.createElement('th');
+            th.textContent = encabezadoTexto;
+            encabezado.appendChild(th);
+        });
+
+        resultados.forEach(function (resultado) {
+            const fila = document.createElement('tr');
+            tabla.appendChild(fila);
+
+            const valores = ['iteracion', 'semilla', 'cuadrado', 'numero_generado'];
+            valores.forEach(function (valor) {
+                const td = document.createElement('td');
+                td.textContent = resultado[valor];
+                fila.appendChild(td);
+            });
+        });
+
+        const volverAlFormulario = document.createElement('a');
+        volverAlFormulario.href = 'index.html';
+        volverAlFormulario.textContent = 'Volver al formulario';
+        volverAlFormulario.style.display = 'block';
+        volverAlFormulario.style.textAlign = 'center';
+        volverAlFormulario.style.fontSize = '18px';
+        volverAlFormulario.style.fontWeight = 'bold';
+        volverAlFormulario.style.marginTop = '20px';
+        volverAlFormulario.style.textDecoration = 'none';
+        volverAlFormulario.style.backgroundColor = '#FFD700';
+        volverAlFormulario.style.color = '#000';
+        volverAlFormulario.style.padding = '10px';
+        volverAlFormulario.style.borderRadius = '5px';
+        volverAlFormulario.style.transition = 'background-color 0.3s';
+
+        volverAlFormulario.addEventListener('mouseover', function () {
+            volverAlFormulario.style.backgroundColor = '#000000';
+            volverAlFormulario.style.color = '#fff';
+        });
+
+        volverAlFormulario.addEventListener('mouseout', function () {
+            volverAlFormulario.style.backgroundColor = '#FFD700';
+            volverAlFormulario.style.color = '#000';
+        });
+
+        container.appendChild(volverAlFormulario);
+    }
+});
+</script>
+</div>
+</body>
+</html>
